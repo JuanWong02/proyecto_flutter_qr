@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:qr_scanner/screens/generate_screen.dart';
 import './screens/scan_screen.dart';
 
 
@@ -45,7 +46,7 @@ class PantallaInicio extends StatelessWidget {
               ),
               onPressed: () {Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ScanScreen()),
+                MaterialPageRoute(builder: (context) => PantallaEscanear()),
               );
               },
               child: const Text('ESCANEAR QR'),
@@ -56,7 +57,11 @@ class PantallaInicio extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 primary: Theme.of(context).primaryColor,
               ),
-              onPressed: () {},
+              onPressed: () {Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PantallaGenerar()),
+              );
+              },
               child: const Text('GENERAR QR'),
             ),
 

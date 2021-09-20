@@ -31,7 +31,10 @@ dependencies:
   cupertino_icons: ^1.0.2
   path_provider: ^2.0.2
   qr_flutter: ^4.0.0
-  barcode_scan: ^3.0.1
+  flutter_share: ^2.0.0
+  share_plus: ^2.1.4
+  qrscan: ^0.3.2
+  url_launcher: ^6.0.10
 
 dev_dependencies:
   flutter_test:

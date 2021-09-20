@@ -1,15 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:barcode_scan/barcode_scan.dart';
+import 'package:qrscan/qrscan.dart' as scanner;
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class ScanScreen extends StatefulWidget {
+class PantallaEscanear extends StatefulWidget {
+  const PantallaEscanear({Key? key}) : super(key: key);
+
   @override
-  _ScanScreenState createState() => _ScanScreenState();
+  _PantallaEscanearState createState() => _PantallaEscanearState();
 }
 
-class _ScanScreenState extends State<ScanScreen> {
+class _PantallaEscanearState extends State<PantallaEscanear> {
   String codigo = "";
   @override
   initState() {
@@ -19,7 +22,12 @@ class _ScanScreenState extends State<ScanScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
-        title: new Text('Escaner QR'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new_outlined, ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        centerTitle: true,
+        title: Text('ESCANEAR QR'),
       ),
       body: new Center(
         child: new Column(
@@ -27,16 +35,17 @@ class _ScanScreenState extends State<ScanScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget> [
             Padding(padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  primary: Theme.of(context).primaryColor
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: Theme.of(context).primaryColor
+                ),
+                onPressed: escanear,
+                child: const Text('INICIAR CAMARA'),
               ),
-              onPressed: () {},
-              child: const Text('INICIAR CAMARA'),
-            ),
             ),
             Padding(padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: Text(codigo, textAlign: TextAlign.center,),
+              child: Text(codigo, textAlign: TextAlign.center),
+
             ),
           ],
         ),
@@ -45,24 +54,21 @@ class _ScanScreenState extends State<ScanScreen> {
   }
   Future escanear() async {
     try {
-      String codigo = (await BarcodeScanner.scan()) as String;
-      setState(() => this.codigo = codigo);
-    } on PlatformException catch (e) {
-      if (e.code == BarcodeScanner.cameraAccessDenied) {
-        setState(() {
-          this.codigo =
-          'El usuario no concedio los permisos para usar la camara';
-        });
-      } else {
-        setState(() => this.codigo = 'Error desconocido: $e');
-      }
-    } on FormatException {
-      setState(() =>
-      this.codigo =
-      'null (El usuario presiono el boton "regresar" antes de escanear)');
-    } catch (e) {
-      setState(() => this.codigo = 'Error desconocido: $e');
+      String? ResultadoCam = await scanner.scan();
+      setState(() {
+        codigo = ResultadoCam!;
+        AbrirURL();
+      });
+    }  on PlatformException catch (e) {
+      print(e);
     }
+
   }
+  void AbrirURL() async => await canLaunch(codigo) ? await launch(codigo) : throw 'No se pudo abrir $codigo';
 }
+
+
+
+
+
 
