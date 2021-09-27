@@ -29,12 +29,16 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  path_provider: ^2.0.2
   qr_flutter: ^4.0.0
   flutter_share: ^2.0.0
-  share_plus: ^2.1.4
+  #esys_flutter_share: ^1.0.2
+  #esys_flutter_share:
+   # git:
+      #url: git://github.com/jawad12345A/esys-flutter-share.git
   qrscan: ^0.3.2
   url_launcher: ^6.0.10
+  path_provider: ^1.5.1
+  share_plus: ^2.1.4
 
 dev_dependencies:
   flutter_test:

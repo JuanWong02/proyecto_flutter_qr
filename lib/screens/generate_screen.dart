@@ -7,6 +7,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'dart:io';
 import 'package:flutter/rendering.dart';
+//import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -27,7 +28,7 @@ class _PantallaGenerarState extends State<PantallaGenerar> {
   File? file;
 
   GlobalKey globalKey = new GlobalKey();
-  String _stringDatos = "Hola desde este QR";
+  String _stringDatos = "QR DE EJEMPLO";
   final TextEditingController _controladorTexto = TextEditingController();
 
   @override
@@ -55,22 +56,24 @@ class _PantallaGenerarState extends State<PantallaGenerar> {
           .findRenderObject() as RenderRepaintBoundary;
 
       var image = await boundary.toImage();
-
-      ByteData? byteData =
-          await image.toByteData(format: ImageByteFormat.png);
-
+      ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
-      final appDir = await getApplicationDocumentsDirectory();
+
+      final appDir = await getExternalStorageDirectory();
 
       var datetime = DateTime.now();
 
-      file = await File('${appDir.path}/$datetime.png').create();
+      file = await File('${appDir.path}/imagen.png').create();
 
       await file?.writeAsBytes(pngBytes);
+
+      print(file!.path);
 
       await Share.shareFiles(
         [file!.path],
         mimeTypes: ["image/png"],
+        text: "compartir QR",
+        subject: "QR"
       );
     } catch(e) {
       print(e.toString());
@@ -97,10 +100,16 @@ class _PantallaGenerarState extends State<PantallaGenerar> {
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget> [
-                  Expanded(child: TextField(
+                  Expanded(child:  TextFormField(
                     controller: _controladorTexto,
                     decoration: InputDecoration(
-                      hintText: "Escribe un mensaje o enlace",
+                      hintText: 'Escribe el Mensaje o Enlace',
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 5,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFF6200EE)),
+                      ),
                     ),
                   ),
                   ),
@@ -126,6 +135,7 @@ class _PantallaGenerarState extends State<PantallaGenerar> {
             child: RepaintBoundary(
               key: globalKey,
               child: QrImage(
+                version: QrVersions.auto,
                 data: _stringDatos,
                 size: 0.5 * AlturaBody,
               ),
